@@ -1,0 +1,95 @@
+@model IEnumerable<NguyenDinhMinhNhat_Buoi4.Models.Category>
+
+@{
+    ViewData["Title"] = "Quản lý danh mục";
+}
+
+<div class="category-container">
+    <h1>Quản lý danh mục sản phẩm</h1>
+
+    <div class="category-actions">
+        <a asp-action="Create" class="button button4">Thêm danh mục mới</a>
+    </div>
+
+    <div class="category-list">
+        @foreach (var item in Model)
+        {
+            <div class="category-card">
+                <div class="category-info">
+                    <h3>@item.Name</h3>
+                    <p>Số sản phẩm: @(item.Products?.Count ?? 0)</p>
+                </div>
+                <div class="category-actions">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="button edit-btn">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="button delete-btn">Xóa</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .category-container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+    }
+
+    .category-actions {
+        margin: 20px 0;
+    }
+
+    .category-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .category-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .category-info h3 {
+        margin: 0;
+        color: #2c3e50;
+    }
+
+    .category-info p {
+        margin: 5px 0 0;
+        color: #666;
+    }
+
+    .category-card .category-actions {
+        display: flex;
+        gap: 10px;
+        margin: 0;
+    }
+
+    .edit-btn {
+        background: #3498db;
+        color: white;
+    }
+
+    .delete-btn {
+        background: #e74c3c;
+        color: white;
+    }
+
+    .button {
+        padding: 8px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: opacity 0.3s;
+    }
+
+    .button:hover {
+        opacity: 0.8;
+        color: white;
+    }
+</style> 

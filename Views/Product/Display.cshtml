@@ -1,0 +1,128 @@
+﻿@model NguyenDinhMinhNhat_Buoi4.Models.Product
+@{
+	ViewData["Title"] = Model.Name;
+	string FormatCurrency(decimal price) => string.Format("{0:N0}đ", price);
+}
+
+<main>
+	<div class="product-container">
+		<button class="top-back" onclick="window.history.back()">← Quay lại</button>
+		<div class="product-image-wrapper">
+			<img src="@Model.ImageUrl" alt="@Model.Name">
+		</div>
+		<div class="product-details">
+			<h1>@Model.Name</h1>
+			<p class="product-description">@Model.Description</p>
+
+			<div class="price-section">
+				<span class="price">@FormatCurrency(Model.Price)</span>
+			</div>
+
+			<p class="category">Danh mục: <strong>@Model.Category?.Name</strong></p>
+
+			<div class="action-buttons">
+				<button class="button button4">Mua Ngay</button>
+				<a asp-action="Update" asp-route-id="@Model.Id" class="button edit-btn">Sửa</a>
+				<a asp-action="Delete" asp-route-id="@Model.Id" class="button delete-btn">Xóa</a>
+			</div>
+		</div>
+	</div>
+</main>
+
+<style>
+	.product-container {
+		display: flex;
+		gap: 30px;
+		max-width: 1200px;
+		margin: 20px auto;
+		padding: 20px;
+		background: white;
+		border-radius: 15px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		position: relative;
+	}
+
+	.product-image-wrapper {
+		flex: 1;
+		position: relative;
+		max-width: 500px;
+	}
+
+	.product-image-wrapper img {
+		width: 100%;
+		height: auto;
+		border-radius: 15px;
+		object-fit: cover;
+	}
+
+	.product-details {
+		flex: 1;
+		padding: 20px;
+	}
+
+	.product-description {
+		margin: 15px 0;
+		color: #555;
+		line-height: 1.6;
+	}
+
+	.price-section {
+		margin: 20px 0;
+	}
+	
+	.price {
+		font-weight: bold;
+		color: #e74c3c;
+		font-size: 24px;
+	}
+
+	.category {
+		margin: 10px 0;
+		color: #666;
+	}
+
+	.top-back {
+		position: absolute;
+		top: 10px;
+		left: 10px;
+		background: #f0f0f0;
+		border: none;
+		padding: 8px 12px;
+		font-size: 14px;
+		cursor: pointer;
+		border-radius: 5px;
+		z-index: 1;
+	}
+
+	.action-buttons {
+		display: flex;
+		gap: 10px;
+		margin-top: 20px;
+	}
+
+	.action-buttons .button {
+		flex: 1;
+		margin: 0;
+	}
+
+	.edit-btn {
+		background: #2196F3;
+		color: white;
+	}
+
+	.delete-btn {
+		background: #f44336;
+		color: white;
+	}
+
+	@@media (max-width: 768px) {
+		.product-container {
+			flex-direction: column;
+			padding: 15px;
+		}
+
+		.product-image-wrapper {
+			max-width: 100%;
+		}
+	}
+</style>

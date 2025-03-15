@@ -1,0 +1,122 @@
+@model IEnumerable<NguyenDinhMinhNhat_Buoi4.Models.Product>
+
+@{
+    ViewData["Title"] = "Danh sách sản phẩm";
+}
+
+<main>
+    <div class="product-list-container">
+        <h1>Quản lý sản phẩm</h1>
+
+        <div class="product-table">
+            <div class="table-header">
+                <div class="col-id">ID</div>
+                <div class="col-name">Tên sản phẩm</div>
+                <div class="col-price">Giá</div>
+                <div class="col-category">Danh mục</div>
+                <div class="col-actions">Thao tác</div>
+            </div>
+
+            @foreach (var product in Model)
+            {
+                <div class="table-row">
+                    <div class="col-id">@product.Id</div>
+                    <div class="col-name">@product.Name</div>
+                    <div class="col-price">@string.Format("{0:N0}đ", product.Price)</div>
+                    <div class="col-category">@product.Category?.Name</div>
+                    <div class="col-actions">
+                        <a asp-action="Display" asp-route-id="@product.Id" class="button view-btn">Xem</a>
+                        <a asp-action="Update" asp-route-id="@product.Id" class="button edit-btn">Sửa</a>
+                        <a asp-action="Delete" asp-route-id="@product.Id" class="button delete-btn">Xóa</a>
+                    </div>
+                </div>
+            }
+        </div>
+        
+        <div class="admin-action">
+            <a asp-action="Add" class="button button4">Thêm sản phẩm mới</a>
+        </div>
+    </div>
+</main>
+
+<style>
+    .product-list-container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-header {
+        display: flex;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .table-row {
+        display: flex;
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        align-items: center;
+    }
+
+    .col-id {
+        width: 100px;
+    }
+
+    .col-name {
+        flex: 2;
+    }
+    
+    .col-price {
+        flex: 1;
+    }
+    
+    .col-category {
+        flex: 1;
+    }
+
+    .col-actions {
+        width: 250px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .button {
+        padding: 8px 15px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+
+    .view-btn {
+        background: #4CAF50;
+        color: white;
+    }
+
+    .edit-btn {
+        background: #2196F3;
+        color: white;
+    }
+
+    .delete-btn {
+        background: #f44336;
+        color: white;
+    }
+
+    .button:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+    
+    .admin-action {
+        margin-top: 20px;
+        text-align: center;
+    }
+</style> 
