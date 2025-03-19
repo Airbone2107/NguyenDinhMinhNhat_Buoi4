@@ -4,125 +4,383 @@
 	string FormatCurrency(decimal price) => string.Format("{0:N0}đ", price);
 }
 
-<main>
-	<div class="product-container">
-		<button class="top-back" onclick="window.history.back()">← Quay lại</button>
-		<div class="product-image-wrapper">
-			<img src="@Model.ImageUrl" alt="@Model.Name">
-		</div>
-		<div class="product-details">
-			<h1>@Model.Name</h1>
-			<p class="product-description">@Model.Description</p>
+<div class="product-detail-container">
+	<div class="breadcrumb">
+		<a asp-controller="Home" asp-action="Index">Trang chủ</a>
+		<i class="fas fa-angle-right"></i>
+		<a asp-controller="Product" asp-action="Index">Sản phẩm</a>
+		<i class="fas fa-angle-right"></i>
+		<span>@Model.Name</span>
+	</div>
 
-			<div class="price-section">
-				<span class="price">@FormatCurrency(Model.Price)</span>
+	<div class="product-detail-wrapper">
+		<div class="product-image-gallery">
+			<div class="main-image">
+				@if (!string.IsNullOrEmpty(Model.ImageUrl))
+				{
+					<img src="@Model.ImageUrl" alt="@Model.Name" id="mainImage">
+				}
+				else
+				{
+					<div class="no-image">
+						<i class="fas fa-image"></i>
+						<p>Không có hình ảnh</p>
+					</div>
+				}
 			</div>
+		</div>
 
-			<p class="category">Danh mục: <strong>@Model.Category?.Name</strong></p>
-
-			<div class="action-buttons">
-				<button class="button button4">Mua Ngay</button>
-				<a asp-action="Update" asp-route-id="@Model.Id" class="button edit-btn">Sửa</a>
-				<a asp-action="Delete" asp-route-id="@Model.Id" class="button delete-btn">Xóa</a>
+		<div class="product-info">
+			<h1 class="product-title">@Model.Name</h1>
+			
+			<div class="product-meta">
+				@if (Model.Category != null)
+				{
+					<div class="product-category">
+						<span>Danh mục:</span>
+						<a href="#" class="category-link">@Model.Category.Name</a>
+					</div>
+				}
+				<div class="product-id">
+					<span>Mã sản phẩm:</span>
+					<span class="id-value">SP@(Model.Id.ToString("D4"))</span>
+				</div>
+			</div>
+			
+			<div class="product-price">
+				<span class="current-price">@FormatCurrency(Model.Price)</span>
+			</div>
+			
+			<div class="product-description">
+				<h3>Mô tả sản phẩm</h3>
+				<div class="description-content">
+					@if (!string.IsNullOrEmpty(Model.Description))
+					{
+						<p>@Model.Description</p>
+					}
+					else
+					{
+						<p>Chưa có mô tả cho sản phẩm này.</p>
+					}
+				</div>
+			</div>
+			
+			<div class="product-actions">
+				<div class="quantity-selector">
+					<button class="quantity-btn minus">
+						<i class="fas fa-minus"></i>
+					</button>
+					<input type="number" value="1" min="1" class="quantity-input">
+					<button class="quantity-btn plus">
+						<i class="fas fa-plus"></i>
+					</button>
+				</div>
+				
+				<div class="action-buttons">
+					<button class="add-to-cart">
+						<i class="fas fa-shopping-cart"></i>
+						Thêm vào giỏ hàng
+					</button>
+					<button class="buy-now">
+						<i class="fas fa-bolt"></i>
+						Mua ngay
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>
-</main>
+</div>
 
 <style>
-	.product-container {
-		display: flex;
-		gap: 30px;
+	.product-detail-container {
 		max-width: 1200px;
-		margin: 20px auto;
-		padding: 20px;
-		background: white;
-		border-radius: 15px;
-		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-		position: relative;
-	}
-
-	.product-image-wrapper {
-		flex: 1;
-		position: relative;
-		max-width: 500px;
-	}
-
-	.product-image-wrapper img {
-		width: 100%;
-		height: auto;
-		border-radius: 15px;
-		object-fit: cover;
-	}
-
-	.product-details {
-		flex: 1;
-		padding: 20px;
-	}
-
-	.product-description {
-		margin: 15px 0;
-		color: #555;
-		line-height: 1.6;
-	}
-
-	.price-section {
-		margin: 20px 0;
+		margin: 30px auto;
+		padding: 0 20px;
 	}
 	
-	.price {
-		font-weight: bold;
-		color: #e74c3c;
-		font-size: 24px;
-	}
-
-	.category {
-		margin: 10px 0;
+	.breadcrumb {
+		display: flex;
+		align-items: center;
+		font-size: 14px;
+		margin-bottom: 30px;
 		color: #666;
 	}
-
-	.top-back {
-		position: absolute;
-		top: 10px;
-		left: 10px;
-		background: #f0f0f0;
-		border: none;
-		padding: 8px 12px;
-		font-size: 14px;
-		cursor: pointer;
-		border-radius: 5px;
-		z-index: 1;
+	
+	.breadcrumb a {
+		color: #3498db;
+		text-decoration: none;
+		transition: color 0.3s;
 	}
-
-	.action-buttons {
+	
+	.breadcrumb a:hover {
+		color: #2980b9;
+	}
+	
+	.breadcrumb i {
+		margin: 0 10px;
+		font-size: 12px;
+		color: #999;
+	}
+	
+	.product-detail-wrapper {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 40px;
+		background: white;
+		border-radius: 15px;
+		overflow: hidden;
+		box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+	}
+	
+	.product-image-gallery {
+		padding: 20px;
+	}
+	
+	.main-image {
+		height: 400px;
 		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: #f8f8f8;
+		border-radius: 10px;
+		overflow: hidden;
+	}
+	
+	.main-image img {
+		max-width: 100%;
+		max-height: 100%;
+		object-fit: contain;
+		transition: transform 0.5s;
+	}
+	
+	.main-image:hover img {
+		transform: scale(1.05);
+	}
+	
+	.no-image {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		color: #999;
+	}
+	
+	.no-image i {
+		font-size: 4em;
+		margin-bottom: 15px;
+	}
+	
+	.product-info {
+		padding: 40px;
+		display: flex;
+		flex-direction: column;
+	}
+	
+	.product-title {
+		font-size: 2em;
+		color: #2c3e50;
+		margin: 0 0 20px 0;
+		line-height: 1.3;
+	}
+	
+	.product-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 15px;
+		margin-bottom: 20px;
+		font-size: 14px;
+	}
+	
+	.product-category, .product-id {
+		display: flex;
+		align-items: center;
+		gap: 5px;
+	}
+	
+	.product-category span, .product-id span:first-child {
+		color: #777;
+	}
+	
+	.category-link {
+		color: #3498db;
+		text-decoration: none;
+		background: #f0f7fc;
+		padding: 3px 10px;
+		border-radius: 30px;
+		transition: all 0.3s;
+	}
+	
+	.category-link:hover {
+		background: #3498db;
+		color: white;
+	}
+	
+	.id-value {
+		font-weight: 600;
+		color: #555;
+	}
+	
+	.product-price {
+		margin: 20px 0;
+		padding: 15px 0;
+		border-top: 1px solid #eee;
+		border-bottom: 1px solid #eee;
+	}
+	
+	.current-price {
+		font-size: 2em;
+		font-weight: 700;
+		color: #e74c3c;
+	}
+	
+	.product-description {
+		margin: 20px 0;
+		flex-grow: 1;
+	}
+	
+	.product-description h3 {
+		font-size: 1.2em;
+		color: #333;
+		margin-bottom: 15px;
+		padding-bottom: 10px;
+		border-bottom: 2px solid #f0f0f0;
+	}
+	
+	.description-content {
+		font-size: 16px;
+		line-height: 1.7;
+		color: #555;
+	}
+	
+	.product-actions {
+		margin-top: 30px;
+	}
+	
+	.quantity-selector {
+		display: flex;
+		align-items: center;
+		margin-bottom: 20px;
+		max-width: 150px;
+	}
+	
+	.quantity-btn {
+		width: 40px;
+		height: 40px;
+		border: 1px solid #ddd;
+		background: white;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		transition: all 0.3s;
+	}
+	
+	.quantity-btn.minus {
+		border-radius: 5px 0 0 5px;
+	}
+	
+	.quantity-btn.plus {
+		border-radius: 0 5px 5px 0;
+	}
+	
+	.quantity-btn:hover {
+		background: #f5f5f5;
+	}
+	
+	.quantity-input {
+		width: 70px;
+		height: 40px;
+		border: 1px solid #ddd;
+		border-left: none;
+		border-right: none;
+		text-align: center;
+		font-size: 16px;
+	}
+	
+	.quantity-input:focus {
+		outline: none;
+	}
+	
+	.action-buttons {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 15px;
+	}
+	
+	.add-to-cart, .buy-now {
+		padding: 15px 25px;
+		border: none;
+		border-radius: 5px;
+		font-size: 16px;
+		font-weight: 600;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		gap: 10px;
-		margin-top: 20px;
+		transition: all 0.3s;
 	}
-
-	.action-buttons .button {
-		flex: 1;
-		margin: 0;
+	
+	.add-to-cart {
+		background-color: white;
+		color: #3498db;
+		border: 2px solid #3498db;
 	}
-
-	.edit-btn {
-		background: #2196F3;
+	
+	.add-to-cart:hover {
+		background-color: #3498db;
 		color: white;
 	}
-
-	.delete-btn {
-		background: #f44336;
+	
+	.buy-now {
+		background-color: #e74c3c;
 		color: white;
 	}
-
+	
+	.buy-now:hover {
+		background-color: #c0392b;
+	}
+	
 	@@media (max-width: 768px) {
-		.product-container {
-			flex-direction: column;
-			padding: 15px;
+		.product-detail-wrapper {
+			grid-template-columns: 1fr;
 		}
-
-		.product-image-wrapper {
-			max-width: 100%;
+		
+		.main-image {
+			height: 300px;
+		}
+		
+		.product-info {
+			padding: 20px;
+		}
+		
+		.action-buttons {
+			grid-template-columns: 1fr;
 		}
 	}
 </style>
+
+@section Scripts {
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Xử lý tăng giảm số lượng sản phẩm
+        const minusBtn = document.querySelector('.quantity-btn.minus');
+        const plusBtn = document.querySelector('.quantity-btn.plus');
+        const quantityInput = document.querySelector('.quantity-input');
+        
+        minusBtn.addEventListener('click', function() {
+            const currentValue = parseInt(quantityInput.value);
+            if (currentValue > 1) {
+                quantityInput.value = currentValue - 1;
+            }
+        });
+        
+        plusBtn.addEventListener('click', function() {
+            const currentValue = parseInt(quantityInput.value);
+            quantityInput.value = currentValue + 1;
+        });
+    });
+</script>
+}

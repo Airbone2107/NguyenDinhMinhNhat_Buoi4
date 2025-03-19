@@ -1,7 +1,7 @@
 @model IEnumerable<NguyenDinhMinhNhat_Buoi4.Models.Product>
 
 @{
-    ViewData["Title"] = "Danh sách sản phẩm";
+    ViewData["Title"] = "Quản lý sản phẩm";
 }
 
 <main>
@@ -25,7 +25,6 @@
                     <div class="col-price">@string.Format("{0:N0}đ", product.Price)</div>
                     <div class="col-category">@product.Category?.Name</div>
                     <div class="col-actions">
-                        <a asp-action="Display" asp-route-id="@product.Id" class="button view-btn">Xem</a>
                         <a asp-action="Update" asp-route-id="@product.Id" class="button edit-btn">Sửa</a>
                         <a asp-action="Delete" asp-route-id="@product.Id" class="button delete-btn">Xóa</a>
                     </div>
@@ -82,7 +81,7 @@
     }
 
     .col-actions {
-        width: 250px;
+        width: 180px;
         display: flex;
         gap: 10px;
     }
@@ -93,11 +92,6 @@
         text-decoration: none;
         font-size: 14px;
         transition: 0.3s;
-    }
-
-    .view-btn {
-        background: #4CAF50;
-        color: white;
     }
 
     .edit-btn {
@@ -118,5 +112,12 @@
     .admin-action {
         margin-top: 20px;
         text-align: center;
+    }
+
+    .button4 {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        font-size: 16px;
     }
 </style> 

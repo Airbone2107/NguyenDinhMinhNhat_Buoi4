@@ -1,16 +1,17 @@
-﻿@model NguyenDinhMinhNhat_Buoi4.Models.Product
+@model NguyenDinhMinhNhat_Buoi4.Models.Product
 @using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
-	ViewData["Title"] = "Thêm sản phẩm mới";
+	ViewData["Title"] = "Cập nhật sản phẩm";
 }
 
 <main>
 	<div class="form-container">
-		<h1>Thêm sản phẩm mới</h1>
+		<h1>Cập nhật sản phẩm</h1>
 
-		<form asp-action="Add" enctype="multipart/form-data">
+		<form asp-action="Update" enctype="multipart/form-data">
 			<div asp-validation-summary="All" class="text-danger"></div>
+			<input type="hidden" asp-for="Id" />
 
 			<div class="form-grid">
 				<div class="form-group">
@@ -29,9 +30,6 @@
 					<label asp-for="CategoryId">Danh mục</label>
 					<div class="category-select-group">
 						<select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-control"></select>
-						<a asp-controller="Category" asp-action="Create" class="button add-category-btn">
-							<i class="fas fa-plus"></i> Thêm danh mục
-						</a>
 					</div>
 				</div>
 
@@ -41,13 +39,23 @@
 					<span asp-validation-for="Description" class="text-danger"></span>
 				</div>
 
-				<div class="form-group">
-					<label asp-for="ImageUrl">Ảnh đại diện</label>
+				<div class="form-group image-group">
+					<label asp-for="ImageUrl">Ảnh hiện tại</label>
+					@if (!string.IsNullOrEmpty(Model.ImageUrl))
+					{
+						<div class="current-image">
+							<img src="@Model.ImageUrl" alt="@Model.Name" style="max-width: 200px; max-height: 200px;" />
+						</div>
+					}
+					<label>Thay đổi ảnh</label>
 					<input type="file" name="imageUrl" class="form-control" />
 				</div>
 			</div>
 
-			<button type="submit" class="button button4">Thêm sản phẩm</button>
+			<div class="form-buttons">
+				<button type="submit" class="button button4">Cập nhật</button>
+				<a asp-action="Index" class="button back-btn">Quay lại danh sách</a>
+			</div>
 		</form>
 	</div>
 </main>
@@ -96,17 +104,34 @@
 		flex: 1;
 	}
 
-	.add-category-btn {
-		background: #3498db;
-		color: white;
-		padding: 10px 15px;
-		border-radius: 5px;
-		text-decoration: none;
-		white-space: nowrap;
+	.current-image {
+		margin: 10px 0;
+		border: 1px solid #ddd;
+		padding: 10px;
+		display: inline-block;
 	}
 
-	.add-category-btn:hover {
-		background: #2980b9;
+	.form-buttons {
+		margin-top: 20px;
+	}
+
+	.button {
+		display: inline-block;
+		padding: 10px 15px;
+		margin-right: 10px;
+		border-radius: 5px;
+		text-decoration: none;
+		cursor: pointer;
+	}
+
+	.button4 {
+		background-color: #4CAF50;
+		color: white;
+		border: none;
+	}
+
+	.back-btn {
+		background-color: #607D8B;
 		color: white;
 	}
 
@@ -118,16 +143,9 @@
 		.category-select-group {
 			flex-direction: column;
 		}
-
-		.add-category-btn {
-			width: 100%;
-			text-align: center;
-			margin-top: 5px;
-		}
 	}
 </style>
 
 @section Scripts {
 	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-}
+} 

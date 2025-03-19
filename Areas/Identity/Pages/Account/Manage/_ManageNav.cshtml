@@ -1,0 +1,145 @@
+@inject SignInManager<NguyenDinhMinhNhat_Buoi4.Models.ApplicationUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+    var currentPage = ViewContext.RouteData.Values["page"]?.ToString() ?? "Index";
+}
+
+<div class="manage-nav-container">
+    <div class="manage-nav-header">
+        <i class="fas fa-user-cog"></i>
+        <span>Quản lý tài khoản</span>
+    </div>
+    
+    <ul class="manage-nav-list">
+        <li class="@(currentPage == "/Account/Manage/Index" ? "active" : "")">
+            <a asp-page="./Index">
+                <i class="fas fa-user"></i>
+                <span>Thông tin cá nhân</span>
+            </a>
+        </li>
+        <li class="@(currentPage == "/Account/Manage/Email" ? "active" : "")">
+            <a id="email" asp-page="./Email">
+                <i class="fas fa-envelope"></i>
+                <span>Email</span>
+            </a>
+        </li>
+        <li class="@(currentPage == "/Account/Manage/ChangePassword" ? "active" : "")">
+            <a id="change-password" asp-page="./ChangePassword">
+                <i class="fas fa-key"></i>
+                <span>Đổi mật khẩu</span>
+            </a>
+        </li>
+        @if (hasExternalLogins)
+        {
+            <li class="@(currentPage == "/Account/Manage/ExternalLogins" ? "active" : "")">
+                <a id="external-login" asp-page="./ExternalLogins">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>Đăng nhập ngoài</span>
+                </a>
+            </li>
+        }
+        <li class="@(currentPage == "/Account/Manage/PersonalData" ? "active" : "")">
+            <a asp-page="./PersonalData">
+                <i class="fas fa-file-alt"></i>
+                <span>Dữ liệu cá nhân</span>
+            </a>
+        </li>
+        <li>
+            <a asp-area="" asp-controller="Home" asp-action="Index">
+                <i class="fas fa-arrow-left"></i>
+                <span>Quay lại trang chủ</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<style>
+    .manage-nav-container {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+    
+    .manage-nav-header {
+        background-color: #3498db;
+        color: white;
+        padding: 15px;
+        font-weight: bold;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .manage-nav-header i {
+        margin-right: 10px;
+    }
+    
+    .manage-nav-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .manage-nav-list li {
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .manage-nav-list li:last-child {
+        border-bottom: none;
+    }
+    
+    .manage-nav-list li a {
+        display: flex;
+        align-items: center;
+        padding: 12px 15px;
+        color: #333;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+    
+    .manage-nav-list li a:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .manage-nav-list li.active a {
+        background-color: #ebf5ff;
+        color: #3498db;
+        font-weight: bold;
+    }
+    
+    .manage-nav-list li i {
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+    }
+    
+    @@media (max-width: 768px) {
+        .manage-nav-list li a span {
+            display: none;
+        }
+        
+        .manage-nav-list li a {
+            justify-content: center;
+        }
+        
+        .manage-nav-list li i {
+            margin-right: 0;
+            font-size: 20px;
+        }
+        
+        .manage-nav-header span {
+            display: none;
+        }
+        
+        .manage-nav-header {
+            justify-content: center;
+        }
+        
+        .manage-nav-header i {
+            margin-right: 0;
+            font-size: 20px;
+        }
+    }
+</style> 

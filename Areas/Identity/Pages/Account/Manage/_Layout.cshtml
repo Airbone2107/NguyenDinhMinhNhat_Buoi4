@@ -1,0 +1,45 @@
+@{
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<div class="account-management-container">
+    <div class="row">
+        <div class="col-md-3">
+            <partial name="_ManageNav" />
+        </div>
+        <div class="col-md-9">
+            <div class="account-content-container">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .account-management-container {
+        padding: 20px 0;
+    }
+    
+    .account-content-container {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        min-height: 400px;
+    }
+    
+    @@media (max-width: 768px) {
+        .account-management-container .row {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .account-management-container .col-md-3 {
+            margin-bottom: 20px;
+        }
+    }
+</style>
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+} 

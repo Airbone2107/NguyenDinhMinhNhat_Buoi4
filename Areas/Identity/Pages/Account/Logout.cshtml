@@ -1,0 +1,134 @@
+﻿@page
+@model LogoutModel
+@{
+    ViewData["Title"] = "Đăng xuất";
+}
+
+<div class="logout-container">
+    <div class="logout-wrapper">
+        <h2><i class="fas fa-sign-out-alt"></i> @ViewData["Title"]</h2>
+        
+        @{
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                <div class="logout-message">
+                    <p>Bạn có chắc chắn muốn đăng xuất không?</p>
+                    
+                    <form class="logout-form" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                        <button type="submit" class="btn-logout">Đăng xuất</button>
+                        <a href="/" class="btn-cancel">Hủy</a>
+                    </form>
+                </div>
+            }
+            else
+            {
+                <div class="logout-success">
+                    <p><i class="fas fa-check-circle"></i> Bạn đã đăng xuất thành công.</p>
+                    <a href="/" class="btn-home">Về trang chủ</a>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<style>
+    .logout-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+        min-height: 40vh;
+    }
+    
+    .logout-wrapper {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        width: 100%;
+        max-width: 500px;
+        text-align: center;
+    }
+    
+    .logout-wrapper h2 {
+        margin-bottom: 30px;
+        color: #3498db;
+    }
+    
+    .logout-message p {
+        font-size: 18px;
+        margin-bottom: 25px;
+    }
+    
+    .logout-form {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    .btn-logout {
+        padding: 10px 20px;
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .btn-logout:hover {
+        background-color: #c0392b;
+    }
+    
+    .btn-cancel {
+        padding: 10px 20px;
+        background-color: #7f8c8d;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        text-decoration: none;
+    }
+    
+    .btn-cancel:hover {
+        background-color: #95a5a6;
+    }
+    
+    .logout-success {
+        text-align: center;
+    }
+    
+    .logout-success p {
+        font-size: 18px;
+        margin-bottom: 25px;
+        color: #2ecc71;
+    }
+    
+    .logout-success p i {
+        font-size: 24px;
+        margin-right: 8px;
+    }
+    
+    .btn-home {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        text-decoration: none;
+    }
+    
+    .btn-home:hover {
+        background-color: #2980b9;
+    }
+</style>

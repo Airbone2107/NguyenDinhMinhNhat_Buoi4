@@ -1,9 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using NguyenDinhMinhNhat_Buoi4.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using NguyenDinhMinhNhat_Buoi4.Areas.Admin.Models;
 
-namespace NguyenDinhMinhNhat_Buoi4.Controllers
+namespace NguyenDinhMinhNhat_Buoi4.Areas.Admin.Controllers
 {
+    [Area("Admin")]
+    [Authorize(Roles = $"{SD.Role_Admin},{SD.Role_Company},{SD.Role_Employee}")]
     public class CategoryController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -13,20 +17,20 @@ namespace NguyenDinhMinhNhat_Buoi4.Controllers
             _context = context;
         }
 
-        // GET: Category
+        // GET: Admin/Category
         public async Task<IActionResult> Index()
         {
             var categories = await _context.Categories.Include(c => c.Products).ToListAsync();
             return View(categories);
         }
 
-        // GET: Category/Create
+        // GET: Admin/Category/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Category/Create
+        // POST: Admin/Category/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name")] Category category)
@@ -40,7 +44,7 @@ namespace NguyenDinhMinhNhat_Buoi4.Controllers
             return View(category);
         }
 
-        // GET: Category/Edit/5
+        // GET: Admin/Category/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -56,7 +60,7 @@ namespace NguyenDinhMinhNhat_Buoi4.Controllers
             return View(category);
         }
 
-        // POST: Category/Edit/5
+        // POST: Admin/Category/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Category category)
@@ -75,7 +79,7 @@ namespace NguyenDinhMinhNhat_Buoi4.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CategoryExists(category.Id))
+                    if (!CategoryExists(id))
                     {
                         return NotFound();
                     }
@@ -89,7 +93,7 @@ namespace NguyenDinhMinhNhat_Buoi4.Controllers
             return View(category);
         }
 
-        // GET: Category/Delete/5
+        // GET: Admin/Category/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -107,7 +111,7 @@ namespace NguyenDinhMinhNhat_Buoi4.Controllers
             return View(category);
         }
 
-        // POST: Category/Delete/5
+        // POST: Admin/Category/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -116,8 +120,9 @@ namespace NguyenDinhMinhNhat_Buoi4.Controllers
             if (category != null)
             {
                 _context.Categories.Remove(category);
-                await _context.SaveChangesAsync();
             }
+
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

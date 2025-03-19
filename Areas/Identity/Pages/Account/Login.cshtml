@@ -1,0 +1,229 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<div class="login-container">
+    <div class="login-form-wrapper">
+        <h2><i class="fas fa-sign-in-alt"></i> Đăng nhập</h2>
+        
+        <form id="account" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            
+            <div class="form-group">
+                <label asp-for="Input.Email">Email</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-envelope"></i>
+                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                </div>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="Input.Password">Mật khẩu</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-lock"></i>
+                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Mật khẩu" />
+                </div>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            
+            <div class="form-check">
+                <input class="form-check-input" asp-for="Input.RememberMe" />
+                <label class="form-check-label" asp-for="Input.RememberMe">Ghi nhớ đăng nhập</label>
+            </div>
+            
+            <button type="submit" class="btn-login">Đăng nhập</button>
+            
+            <div class="form-links">
+                <a class="forgot-password" asp-page="./ForgotPassword">Quên mật khẩu?</a>
+                <a class="register-link" asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Đăng ký tài khoản mới</a>
+            </div>
+        </form>
+        
+        @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+        {
+            <div class="external-auth">
+                <div class="divider"><span>Hoặc đăng nhập với</span></div>
+                
+                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <div class="social-buttons">
+                        @foreach (var provider in Model.ExternalLogins!)
+                        {
+                            <button type="submit" class="social-btn" name="provider" value="@provider.Name" title="Đăng nhập với @provider.DisplayName">
+                                @if (provider.Name.ToLower().Contains("facebook"))
+                                {
+                                    <i class="fab fa-facebook-f"></i>
+                                }
+                                else if (provider.Name.ToLower().Contains("google"))
+                                {
+                                    <i class="fab fa-google"></i>
+                                }
+                                else if (provider.Name.ToLower().Contains("microsoft"))
+                                {
+                                    <i class="fab fa-microsoft"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-external-link-alt"></i>
+                                }
+                                @provider.DisplayName
+                            </button>
+                        }
+                    </div>
+                </form>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+    }
+    
+    .login-form-wrapper {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        width: 100%;
+        max-width: 450px;
+    }
+    
+    .login-form-wrapper h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #3498db;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+    
+    .input-with-icon {
+        position: relative;
+    }
+    
+    .input-with-icon i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+    }
+    
+    .input-with-icon input {
+        padding-left: 40px;
+        height: 45px;
+        width: 100%;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+    }
+    
+    .form-check {
+        margin-bottom: 20px;
+    }
+    
+    .text-danger {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 5px;
+        display: block;
+    }
+    
+    .btn-login {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .btn-login:hover {
+        background-color: #2980b9;
+    }
+    
+    .form-links {
+        margin-top: 15px;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .forgot-password, .register-link {
+        color: #3498db;
+        text-decoration: none;
+        font-size: 14px;
+    }
+    
+    .forgot-password:hover, .register-link:hover {
+        text-decoration: underline;
+    }
+    
+    .divider {
+        text-align: center;
+        margin: 20px 0;
+        position: relative;
+    }
+    
+    .divider::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 100%;
+        height: 1px;
+        background-color: #e0e0e0;
+    }
+    
+    .divider span {
+        background-color: white;
+        padding: 0 15px;
+        position: relative;
+        color: #6c757d;
+    }
+    
+    .social-buttons {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .social-btn {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .social-btn:hover {
+        background-color: #f8f9fa;
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

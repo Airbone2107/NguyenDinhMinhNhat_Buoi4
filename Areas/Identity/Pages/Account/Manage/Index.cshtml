@@ -1,0 +1,138 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Thông tin cá nhân";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+<h3 class="profile-title">@ViewData["Title"]</h3>
+
+<div class="profile-form-container">
+    <form id="profile-form" method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+        
+        <div class="form-section">
+            <div class="form-group">
+                <label asp-for="Input.FullName">Họ và tên</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-user"></i>
+                    <input asp-for="Input.FullName" class="form-control" />
+                </div>
+                <span asp-validation-for="Input.FullName" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="Username">Tên đăng nhập</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-user-tag"></i>
+                    <input asp-for="Username" class="form-control" disabled />
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="Input.PhoneNumber">Số điện thoại</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-phone"></i>
+                    <input asp-for="Input.PhoneNumber" class="form-control" />
+                </div>
+                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="Input.Address">Địa chỉ</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <input asp-for="Input.Address" class="form-control" />
+                </div>
+                <span asp-validation-for="Input.Address" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="Input.Age">Tuổi</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-birthday-cake"></i>
+                    <input asp-for="Input.Age" class="form-control" />
+                </div>
+                <span asp-validation-for="Input.Age" class="text-danger"></span>
+            </div>
+        </div>
+        
+        <button id="update-profile-button" type="submit" class="btn-update-profile">Cập nhật thông tin</button>
+    </form>
+</div>
+
+<style>
+    .profile-title {
+        color: #3498db;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .profile-form-container {
+        max-width: 600px;
+    }
+    
+    .form-section {
+        margin-bottom: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+    
+    .input-with-icon {
+        position: relative;
+    }
+    
+    .input-with-icon i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+    }
+    
+    .input-with-icon input,
+    .input-with-icon select {
+        padding-left: 40px;
+        height: 45px;
+        width: 100%;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+    }
+    
+    .text-danger {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 5px;
+        display: block;
+    }
+    
+    .btn-update-profile {
+        display: block;
+        padding: 12px 20px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .btn-update-profile:hover {
+        background-color: #2980b9;
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+} 

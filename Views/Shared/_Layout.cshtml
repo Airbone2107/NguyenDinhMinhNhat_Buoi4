@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - 2280602202</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <style>
         /* Reset CSS */
         * {
@@ -16,197 +17,273 @@
 
         /* Global Styles */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            max-width: 1200px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            max-width: 1300px;
             margin: 0 auto;
+            color: #333;
+            line-height: 1.6;
         }
 
         /* Header */
         header {
-            background-color: #2c3e50;
+            background: linear-gradient(135deg, #3498db, #2ecc71);
             color: #fff;
-            text-align: center;
-            padding: 20px 0;
+            padding: 25px 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 0 0 15px 15px;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
+            transform: rotate(30deg);
+        }
+        
+        header h1 {
+            position: relative;
+            font-weight: 700;
+            font-size: 2.4rem;
+            margin: 0;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
         }
 
         /* Navigation */
         nav {
-            background-color: #34495e;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            margin: 15px 20px;
         }
-        nav ul {
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .main-menu {
             list-style: none;
             display: flex;
-            justify-content: center;
-            padding: 10px 0;
+            gap: 25px;
+            padding: 15px 0;
+            margin: 0;
         }
-        nav ul li {
-            margin: 0 15px;
+        
+        .user-menu-container {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin: 0;
         }
+        
         nav ul li a {
-            color: #fff;
+            color: #3a3a3a;
             text-decoration: none;
-            font-size: 16px;
-            transition: color 0.3s;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s;
+            padding: 10px 0;
+            position: relative;
         }
+        
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            transition: width 0.3s;
+        }
+        
         nav ul li a:hover {
-            color: #f39c12;
+            color: #3498db;
+        }
+        
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        
+        nav ul li a i {
+            margin-right: 5px;
+            color: #3498db;
+        }
+
+        /* Main Content */
+        main {
+            min-height: 500px;
+            padding: 20px;
         }
 
         /* Footer */
         footer {
-            background-color: #2c3e50;
-            color: #fff;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: #f5f5f5;
             text-align: center;
-            padding: 20px;
+            padding: 40px 20px;
+            margin-top: 40px;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+            gap: 30px;
+            border-radius: 15px 15px 0 0;
+            position: relative;
         }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+        }
+        
         .footer-item {
-            padding: 10px;
+            padding: 15px;
+            text-align: left;
         }
-        @@media (max-width: 576px) {
+        
+        .footer-item h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .footer-item h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+        }
+        
+        .footer-item p {
+            margin: 10px 0;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        .footer-item p:hover {
+            opacity: 1;
+        }
+        
+        .footer-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: #3498db;
+        }
+        
+        @@media (max-width: 768px) {
             footer {
                 grid-template-columns: 1fr;
             }
+            
+            .footer-item {
+                text-align: center;
+            }
+            
+            .footer-item h3::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            nav .main-menu {
+                gap: 15px;
+            }
         }
 
-        /* Styles cho product-card */
-        .product-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            padding: 20px 0;
-        }
-        .product-card {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
-        }
-        .product-card:hover {
-            transform: translateY(-5px);
-        }
-        .product-image-wrapper {
-            position: relative;
-            height: 200px;
-            overflow: hidden;
-        }
-        .product-image-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .product-card h2 {
-            font-size: 18px;
-            margin: 10px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .product-card p {
-            font-size: 14px;
-            margin: 0 10px 10px;
-            height: 40px;
-            overflow: hidden;
-            color: #666;
-        }
-        .price {
-            font-weight: bold;
-            color: #e74c3c;
-            font-size: 18px;
-            margin: 0 10px 10px;
-            display: block;
-        }
-        .product-link {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
+        /* Buttons and common components */
         .button {
-            display: block;
-            text-align: center;
-            padding: 10px;
-            margin: 10px;
-            border: none;
+            padding: 10px 20px;
             border-radius: 5px;
+            transition: all 0.3s;
             cursor: pointer;
             text-decoration: none;
         }
+        
         .button4 {
-            background-color: #4CAF50;
+            background: linear-gradient(to right, #2ecc71, #27ae60);
             color: white;
-            transition: background-color 0.3s;
+            border: none;
+            box-shadow: 0 3px 6px rgba(46, 204, 113, 0.2);
         }
+        
         .button4:hover {
-            background-color: #2E8B57;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(46, 204, 113, 0.3);
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header>
-        <h1>Nguyễn Đình Minh Nhật 2280602202</h1>
+        <div class="container">
+            <h1>Shop Online</h1>
+        </div>
     </header>
-
-    <!-- Navigation -->
     <nav>
-        <ul>
-            <li><a asp-controller="Product" asp-action="Index">Trang Chủ</a></li>
-            <li><a asp-controller="Product" asp-action="List">Quản lý sản phẩm</a></li>
-            <li><a asp-controller="Category" asp-action="Index">Quản lý danh mục</a></li>
-            <li><a asp-controller="Product" asp-action="Add">Thêm mới</a></li>
-        </ul>
+        <div class="nav-container">
+            <ul class="main-menu">
+                <li><a asp-area="" asp-controller="Home" asp-action="Index"><i class="fas fa-home"></i> Trang Chủ</a></li>
+                <li><a asp-area="" asp-controller="Product" asp-action="Index"><i class="fas fa-box"></i> Sản Phẩm</a></li>
+                
+                @if (User.IsInRole("Admin") || User.IsInRole("Company") || User.IsInRole("Employee"))
+                {
+                    <li><a asp-area="Admin" asp-controller="Product" asp-action="Index"><i class="fas fa-cubes"></i> Quản Lý Sản Phẩm</a></li>
+                    <li><a asp-area="Admin" asp-controller="Category" asp-action="Index"><i class="fas fa-folder"></i> Quản Lý Danh Mục</a></li>
+                }
+            </ul>
+            
+            <ul class="user-menu-container">
+                <partial name="_LoginPartial" />
+            </ul>
+        </div>
     </nav>
 
-    <!-- Main Content -->
-    <main>
-        @RenderBody()
-    </main>
+    <div>
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
 
-    <!-- Footer -->
     <footer>
-        <!-- Cột 1 -->
         <div class="footer-item">
-            <p>
-                <strong>Địa chỉ Shu's Bean Collections/ Bean Field</strong><br />
-                31 đường số 2 phường 16 quận Gò Vấp, TP.HCM
-            </p>
-            <table class="time-table">
-                <tr>
-                    <th>Thứ Hai:</th>
-                    <td>Nghỉ</td>
-                </tr>
-                <tr>
-                    <th>Thứ Ba - Thứ Sáu:</th>
-                    <td>13h00 - 22h00</td>
-                </tr>
-                <tr>
-                    <th>Thứ Bảy & Chủ Nhật:</th>
-                    <td>9h00 - 22h00</td>
-                </tr>
-            </table>
+            <h3><i class="fas fa-info-circle"></i> Thông tin Shop</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Địa chỉ: 123 Đường ABC, Quận XYZ</p>
+            <p><i class="fas fa-envelope"></i> Email: info@shop.com</p>
+            <p><i class="fas fa-phone"></i> Điện thoại: 0123 456 789</p>
         </div>
-        <!-- Cột 2 -->
         <div class="footer-item">
-            <p>
-                Copyright © 2025
-                <strong>Bean Field</strong><br />
-                <a href="#" style="color: inherit;">Điều khoản dịch vụ</a>
-            </p>
+            <h3><i class="fas fa-file-contract"></i> Chính sách</h3>
+            <p><i class="fas fa-shield-alt"></i> Chính sách bảo mật</p>
+            <p><i class="fas fa-file-signature"></i> Điều khoản sử dụng</p>
+            <p><i class="fas fa-exchange-alt"></i> Chính sách đổi trả</p>
         </div>
-        <!-- Cột 3 -->
         <div class="footer-item">
-            <p>
-                <a href="https://facebook.com/" style="color: inherit;">Facebook của Shop</a><br />
-                <a href="https://twitter.com/" style="color: inherit;">Twitter của Shop</a><br />
-                <a href="https://instagram.com/" style="color: inherit;">Instagram của Shop</a>
-            </p>
+            <h3><i class="fas fa-share-alt"></i> Theo dõi chúng tôi</h3>
+            <p><i class="fab fa-facebook"></i> Facebook</p>
+            <p><i class="fab fa-instagram"></i> Instagram</p>
+            <p><i class="fab fa-twitter"></i> Twitter</p>
         </div>
     </footer>
-
+    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
