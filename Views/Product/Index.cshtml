@@ -70,7 +70,9 @@
 					</div>
 				</a>
 				<div class="product-actions">
-					<button class="btn-cart"><i class="fas fa-shopping-cart"></i> Mua ngay</button>
+					<button class="btn-cart" onclick="addToCart(@product.Id, 1)">
+						<i class="fas fa-shopping-cart"></i> Thêm vào giỏ
+					</button>
 					<a asp-action="Display" asp-route-id="@product.Id" class="btn-detail">Chi tiết <i class="fas fa-arrow-right"></i></a>
 				</div>
 			</div>
@@ -484,5 +486,100 @@
             }
         });
     });
+    
+    // Hàm thêm sản phẩm vào giỏ hàng
+    function addToCart(productId, quantity) {
+        fetch(`/ShoppingCart/AddToCart?productId=${productId}&quantity=${quantity}`, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Hiển thị thông báo thành công
+                showNotification('Đã thêm sản phẩm vào giỏ hàng!', 'success');
+                
+                // Cập nhật số lượng sản phẩm trong giỏ hàng
+                updateCartItemCount();
+                updateCartPreview();
+            }
+        })
+        .catch(error => {
+            console.error('Lỗi khi thêm vào giỏ hàng:', error);
+            showNotification('Có lỗi xảy ra khi thêm sản phẩm!', 'error');
+        });
+    }
+    
+    // Hàm hiển thị thông báo
+    function showNotification(message, type = 'success') {
+        // Tạo phần tử thông báo
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                <span>${message}</span>
+            </div>
+        `;
+        
+        // Thêm vào body
+        document.body.appendChild(notification);
+        
+        // Hiển thị từ từ
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 10);
+        
+        // Tự động ẩn sau 3 giây
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 3000);
+    }
 </script>
+
+<style>
+    /* CSS cho thông báo */
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transform: translateY(-10px);
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+    
+    .notification.show {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    
+    .notification.success {
+        background-color: #2ecc71;
+        color: white;
+    }
+    
+    .notification.error {
+        background-color: #e74c3c;
+        color: white;
+    }
+    
+    .notification-content {
+        display: flex;
+        align-items: center;
+    }
+    
+    .notification-content i {
+        margin-right: 10px;
+        font-size: 1.2rem;
+    }
+</style>
 }

@@ -36,6 +36,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<IProductRepository, EFProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, EFCategoryRepository>();
+builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
 
 var app = builder.Build();
 

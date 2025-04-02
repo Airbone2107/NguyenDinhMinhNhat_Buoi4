@@ -59,8 +59,21 @@ namespace NguyenDinhMinhNhat_Buoi4.Repositories
         /// <returns>Task hoàn thành khi cập nhật xong</returns>
         public async Task UpdateAsync(Product product)
         {
-            _context.Products.Update(product);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Entry(product).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log lỗi chi tiết
+                Console.WriteLine($"Lỗi trong Repository.UpdateAsync: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                }
+                throw; // Ném lại ngoại lệ để controller có thể xử lý
+            }
         }
         
         /// <summary>

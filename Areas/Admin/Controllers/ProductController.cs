@@ -92,34 +92,81 @@ namespace NguyenDinhMinhNhat_Buoi4.Areas.Admin.Controllers
                 return NotFound();
             }
             
-            if (ModelState.IsValid)
+            // Ghi lại trạng thái ModelState
+            if (!ModelState.IsValid)
             {
-                try
+                foreach (var state in ModelState)
                 {
-                    if (imageUrl != null)
+                    foreach (var error in state.Value.Errors)
                     {
-                        // Xóa ảnh cũ nếu cần
-                        var currentProduct = await _productRepository.GetByIdAsync(id);
-                        if (!string.IsNullOrEmpty(currentProduct.ImageUrl))
+                        Console.WriteLine($"Lỗi ở {state.Key}: {error.ErrorMessage}");
+                    }
+                }
+                
+                // Bỏ qua lỗi Description và ImageUrl nếu có
+                if (ModelState.ContainsKey("Description"))
+                {
+                    ModelState.Remove("Description");
+                }
+                
+                if (ModelState.ContainsKey("ImageUrl"))
+                {
+                    ModelState.Remove("ImageUrl");
+                }
+            }
+            
+            try
+            {
+                // Lấy thông tin sản phẩm hiện tại từ database
+                var currentProduct = await _productRepository.GetByIdAsync(id);
+                if (currentProduct == null)
+                {
+                    return NotFound();
+                }
+                
+                // Áp dụng dữ liệu mới từ form vào sản phẩm hiện tại
+                currentProduct.Name = product.Name;
+                currentProduct.Price = product.Price;
+                currentProduct.CategoryId = product.CategoryId;
+                
+                // Chỉ cập nhật Description nếu có giá trị
+                if (!string.IsNullOrEmpty(product.Description))
+                {
+                    currentProduct.Description = product.Description;
+                }
+                
+                // Xử lý hình ảnh (nếu có)
+                if (imageUrl != null)
+                {
+                    // Xóa ảnh cũ nếu cần
+                    if (!string.IsNullOrEmpty(currentProduct.ImageUrl))
+                    {
+                        var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", currentProduct.ImageUrl.TrimStart('/'));
+                        if (System.IO.File.Exists(oldImagePath))
                         {
-                            var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", currentProduct.ImageUrl.TrimStart('/'));
-                            if (System.IO.File.Exists(oldImagePath))
-                            {
-                                System.IO.File.Delete(oldImagePath);
-                            }
+                            System.IO.File.Delete(oldImagePath);
                         }
-                        
-                        // Lưu ảnh mới
-                        product.ImageUrl = await SaveImage(imageUrl);
                     }
                     
-                    await _productRepository.UpdateAsync(product);
-                    return RedirectToAction("Index");
+                    // Lưu ảnh mới
+                    currentProduct.ImageUrl = await SaveImage(imageUrl);
                 }
-                catch
+                // Không cần else vì chúng ta đang sử dụng đối tượng currentProduct đã có ImageUrl
+                
+                // Cập nhật sản phẩm trong database
+                await _productRepository.UpdateAsync(currentProduct);
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                // Ghi log lỗi để có thông tin chi tiết
+                Console.WriteLine($"Lỗi cập nhật sản phẩm: {ex.Message}");
+                if (ex.InnerException != null)
                 {
-                    ModelState.AddModelError("", "Không thể cập nhật sản phẩm. Vui lòng thử lại sau.");
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
                 }
+                
+                ModelState.AddModelError("", $"Không thể cập nhật sản phẩm: {ex.Message}");
             }
             
             var categories = await _categoryRepository.GetAllAsync();

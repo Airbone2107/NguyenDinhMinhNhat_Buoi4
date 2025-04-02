@@ -1,0 +1,307 @@
+@model NguyenDinhMinhNhat_Buoi4.Models.Order
+
+@{
+    ViewData["Title"] = "Đặt hàng thành công";
+}
+
+<div class="order-complete-container">
+    <div class="order-success">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h1>Đặt hàng thành công!</h1>
+        <p class="success-message">Cảm ơn bạn đã đặt hàng. Đơn hàng của bạn đang được xử lý.</p>
+        <div class="order-number">
+            <strong>Mã đơn hàng:</strong> #@Model.Id
+        </div>
+    </div>
+
+    <div class="order-details">
+        <h2>Chi tiết đơn hàng</h2>
+        
+        <div class="details-section">
+            <h3>Thông tin người nhận</h3>
+            <div class="info-row">
+                <span>Họ và tên:</span>
+                <span>@Model.CustomerName</span>
+            </div>
+            <div class="info-row">
+                <span>Email:</span>
+                <span>@Model.Email</span>
+            </div>
+            <div class="info-row">
+                <span>Số điện thoại:</span>
+                <span>@Model.Phone</span>
+            </div>
+            <div class="info-row">
+                <span>Địa chỉ giao hàng:</span>
+                <span>@Model.Address</span>
+            </div>
+        </div>
+
+        <div class="details-section">
+            <h3>Thông tin thanh toán</h3>
+            <div class="info-row">
+                <span>Ngày đặt hàng:</span>
+                <span>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</span>
+            </div>
+            <div class="info-row">
+                <span>Trạng thái:</span>
+                <span class="order-status">Đang xử lý</span>
+            </div>
+        </div>
+
+        <div class="details-section">
+            <h3>Sản phẩm đã đặt</h3>
+            <div class="order-items">
+                @foreach (var item in ViewBag.OrderDetails)
+                {
+                    <div class="order-item">
+                        <div class="item-image-name">
+                            <img src="@(item.ImageUrl ?? "/images/no-image.png")" alt="@item.ProductName" class="item-image">
+                            <div class="item-name">@item.ProductName</div>
+                        </div>
+                        <div class="item-quantity">x@(item.Quantity)</div>
+                        <div class="item-price">@string.Format("{0:N0}đ", item.Price * item.Quantity)</div>
+                    </div>
+                }
+            </div>
+            <div class="order-summary">
+                <div class="summary-row">
+                    <span>Tạm tính:</span>
+                    <span>@string.Format("{0:N0}đ", ViewBag.SubTotal)</span>
+                </div>
+                <div class="summary-row">
+                    <span>Phí vận chuyển:</span>
+                    <span>@string.Format("{0:N0}đ", ViewBag.ShippingFee)</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Tổng cộng:</span>
+                    <span>@string.Format("{0:N0}đ", ViewBag.Total)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="after-order-actions">
+        <a asp-controller="Home" asp-action="Index" class="btn-continue-shopping">
+            <i class="fas fa-home"></i> Trang chủ
+        </a>
+        <a asp-controller="Product" asp-action="Index" class="btn-browse-products">
+            <i class="fas fa-box"></i> Tiếp tục mua sắm
+        </a>
+    </div>
+</div>
+
+<style>
+    .order-complete-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .order-success {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .success-icon {
+        font-size: 70px;
+        color: #2ecc71;
+        margin-bottom: 20px;
+    }
+
+    .order-success h1 {
+        color: #2c3e50;
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+
+    .success-message {
+        color: #7f8c8d;
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+    }
+
+    .order-number {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        display: inline-block;
+    }
+
+    .confirmation-email {
+        color: #7f8c8d;
+        font-size: 0.95rem;
+    }
+
+    .order-details {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .order-details h2 {
+        font-size: 1.5rem;
+        color: #2c3e50;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #e1e1e1;
+    }
+
+    .details-section {
+        margin-bottom: 30px;
+    }
+
+    .details-section h3 {
+        font-size: 1.2rem;
+        color: #34495e;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        padding: 5px 0;
+    }
+
+    .info-row span:first-child {
+        font-weight: 500;
+        color: #7f8c8d;
+    }
+
+    .info-row span:last-child {
+        color: #2c3e50;
+    }
+
+    .order-status {
+        color: #f39c12;
+        font-weight: 600;
+    }
+
+    .order-items {
+        margin-bottom: 20px;
+    }
+
+    .order-item {
+        display: grid;
+        grid-template-columns: 3fr 0.5fr 1fr;
+        padding: 10px 0;
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+    .item-image-name {
+        display: flex;
+        align-items: center;
+    }
+
+    .item-image {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+
+    .item-name {
+        font-weight: 500;
+        color: #2c3e50;
+    }
+
+    .item-quantity {
+        text-align: center;
+        color: #7f8c8d;
+    }
+
+    .item-price {
+        text-align: right;
+        font-weight: 500;
+        color: #2c3e50;
+    }
+
+    .order-summary {
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        margin-top: 20px;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 1rem;
+        color: #7f8c8d;
+    }
+
+    .summary-row.total {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #e1e1e1;
+    }
+
+    .after-order-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .btn-continue-shopping,
+    .btn-browse-products {
+        padding: 15px 0;
+        text-align: center;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .btn-continue-shopping {
+        background-color: #3498db;
+        color: white;
+    }
+
+    .btn-continue-shopping:hover {
+        background-color: #2980b9;
+        color: white;
+    }
+
+    .btn-browse-products {
+        background-color: #2ecc71;
+        color: white;
+    }
+
+    .btn-browse-products:hover {
+        background-color: #27ae60;
+        color: white;
+    }
+
+    @@media (max-width: 768px) {
+        .after-order-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .info-row {
+            flex-direction: column;
+            border-bottom: 1px solid #f8f9fa;
+            padding-bottom: 10px;
+        }
+
+        .info-row span:first-child {
+            margin-bottom: 5px;
+        }
+    }
+</style> 

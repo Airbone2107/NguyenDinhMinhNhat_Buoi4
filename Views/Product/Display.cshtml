@@ -5,87 +5,87 @@
 }
 
 <div class="product-detail-container">
-	<div class="breadcrumb">
+	<div class="product-breadcrumb">
 		<a asp-controller="Home" asp-action="Index">Trang chủ</a>
-		<i class="fas fa-angle-right"></i>
+		<span class="separator"><i class="fas fa-chevron-right"></i></span>
 		<a asp-controller="Product" asp-action="Index">Sản phẩm</a>
-		<i class="fas fa-angle-right"></i>
-		<span>@Model.Name</span>
+		<span class="separator"><i class="fas fa-chevron-right"></i></span>
+		<span class="current">@Model.Name</span>
 	</div>
 
-	<div class="product-detail-wrapper">
-		<div class="product-image-gallery">
-			<div class="main-image">
-				@if (!string.IsNullOrEmpty(Model.ImageUrl))
-				{
-					<img src="@Model.ImageUrl" alt="@Model.Name" id="mainImage">
-				}
-				else
-				{
-					<div class="no-image">
-						<i class="fas fa-image"></i>
-						<p>Không có hình ảnh</p>
-					</div>
-				}
-			</div>
-		</div>
-
-		<div class="product-info">
-			<h1 class="product-title">@Model.Name</h1>
-			
-			<div class="product-meta">
-				@if (Model.Category != null)
-				{
-					<div class="product-category">
-						<span>Danh mục:</span>
-						<a href="#" class="category-link">@Model.Category.Name</a>
-					</div>
-				}
-				<div class="product-id">
-					<span>Mã sản phẩm:</span>
-					<span class="id-value">SP@(Model.Id.ToString("D4"))</span>
-				</div>
-			</div>
-			
-			<div class="product-price">
-				<span class="current-price">@FormatCurrency(Model.Price)</span>
-			</div>
-			
-			<div class="product-description">
-				<h3>Mô tả sản phẩm</h3>
-				<div class="description-content">
-					@if (!string.IsNullOrEmpty(Model.Description))
+	<div class="product-detail-content">
+		<div class="product-detail-left">
+			<div class="product-image-gallery">
+				<div class="product-main-image">
+					@if (!string.IsNullOrEmpty(Model.ImageUrl))
 					{
-						<p>@Model.Description</p>
+						<img src="@Model.ImageUrl" alt="@Model.Name" id="mainImage" />
 					}
 					else
 					{
-						<p>Chưa có mô tả cho sản phẩm này.</p>
+						<div class="no-image">
+							<i class="fas fa-image"></i>
+							<span>Không có hình ảnh</span>
+						</div>
 					}
 				</div>
 			</div>
+		</div>
+
+		<div class="product-detail-right">
+			<h1 class="product-title">@Model.Name</h1>
 			
-			<div class="product-actions">
-				<div class="quantity-selector">
-					<button class="quantity-btn minus">
-						<i class="fas fa-minus"></i>
-					</button>
-					<input type="number" value="1" min="1" class="quantity-input">
-					<button class="quantity-btn plus">
-						<i class="fas fa-plus"></i>
-					</button>
+			<div class="product-info">
+				<div class="info-item">
+					<span class="info-label">Mã sản phẩm:</span>
+					<span class="info-value">@Model.Id</span>
 				</div>
 				
-				<div class="action-buttons">
-					<button class="add-to-cart">
-						<i class="fas fa-shopping-cart"></i>
-						Thêm vào giỏ hàng
-					</button>
-					<button class="buy-now">
-						<i class="fas fa-bolt"></i>
-						Mua ngay
-					</button>
-				</div>
+				@if (Model.Category != null)
+				{
+					<div class="info-item">
+						<span class="info-label">Danh mục:</span>
+						<span class="info-value category-name">@Model.Category.Name</span>
+					</div>
+				}
+			</div>
+
+			<div class="product-price">
+				<span class="price-label">Giá bán:</span>
+				<span class="price-amount">@FormatCurrency(Model.Price)</span>
+			</div>
+
+			<div class="product-description">
+				<h3>Mô tả sản phẩm</h3>
+				<p>@Html.Raw(Model.Description)</p>
+			</div>
+
+			<div class="product-actions">
+				<form class="add-to-cart-form" asp-controller="ShoppingCart" asp-action="AddToCart" method="post">
+					<input type="hidden" name="productId" value="@Model.Id" />
+					
+					<div class="quantity-selector">
+						<label for="quantity">Số lượng:</label>
+						<div class="quantity-buttons">
+							<button type="button" class="quantity-decrease" onclick="decreaseQuantity()">
+								<i class="fas fa-minus"></i>
+							</button>
+							<input type="number" id="quantity" name="quantity" min="1" value="1" readonly />
+							<button type="button" class="quantity-increase" onclick="increaseQuantity()">
+								<i class="fas fa-plus"></i>
+							</button>
+						</div>
+					</div>
+					
+					<div class="action-buttons">
+						<button type="submit" class="btn-add-to-cart">
+							<i class="fas fa-shopping-cart"></i> Thêm vào giỏ hàng
+						</button>
+						<button type="button" onclick="buyNow()" class="btn-buy-now">
+							<i class="fas fa-bolt"></i> Mua ngay
+						</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -94,293 +94,271 @@
 <style>
 	.product-detail-container {
 		max-width: 1200px;
-		margin: 30px auto;
-		padding: 0 20px;
-	}
-	
-	.breadcrumb {
-		display: flex;
-		align-items: center;
-		font-size: 14px;
-		margin-bottom: 30px;
-		color: #666;
-	}
-	
-	.breadcrumb a {
-		color: #3498db;
-		text-decoration: none;
-		transition: color 0.3s;
-	}
-	
-	.breadcrumb a:hover {
-		color: #2980b9;
-	}
-	
-	.breadcrumb i {
-		margin: 0 10px;
-		font-size: 12px;
-		color: #999;
-	}
-	
-	.product-detail-wrapper {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 40px;
-		background: white;
-		border-radius: 15px;
-		overflow: hidden;
-		box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-	}
-	
-	.product-image-gallery {
+		margin: 0 auto;
 		padding: 20px;
 	}
 	
-	.main-image {
+	.product-breadcrumb {
+		display: flex;
+		align-items: center;
+		margin-bottom: 30px;
+		font-size: 14px;
+	}
+	
+	.product-breadcrumb a {
+		color: #3498db;
+		text-decoration: none;
+	}
+	
+	.product-breadcrumb .separator {
+		margin: 0 10px;
+		color: #7f8c8d;
+		font-size: 12px;
+	}
+	
+	.product-breadcrumb .current {
+		color: #7f8c8d;
+		font-weight: 500;
+	}
+	
+	.product-detail-content {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 40px;
+	}
+	
+	.product-main-image {
+		width: 100%;
 		height: 400px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background-color: #f8f8f8;
-		border-radius: 10px;
 		overflow: hidden;
+		background-color: white;
+		border-radius: 10px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 	}
 	
-	.main-image img {
+	.product-main-image img {
 		max-width: 100%;
 		max-height: 100%;
 		object-fit: contain;
-		transition: transform 0.5s;
+		transition: transform 0.3s ease;
 	}
 	
-	.main-image:hover img {
+	.product-main-image:hover img {
 		transform: scale(1.05);
 	}
 	
 	.no-image {
-		width: 100%;
-		height: 100%;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		color: #999;
+		color: #95a5a6;
 	}
 	
 	.no-image i {
-		font-size: 4em;
-		margin-bottom: 15px;
-	}
-	
-	.product-info {
-		padding: 40px;
-		display: flex;
-		flex-direction: column;
+		font-size: 50px;
+		margin-bottom: 10px;
 	}
 	
 	.product-title {
-		font-size: 2em;
-		color: #2c3e50;
+		font-size: 28px;
 		margin: 0 0 20px 0;
-		line-height: 1.3;
+		color: #2c3e50;
 	}
 	
-	.product-meta {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 15px;
+	.product-info {
 		margin-bottom: 20px;
-		font-size: 14px;
 	}
 	
-	.product-category, .product-id {
-		display: flex;
-		align-items: center;
-		gap: 5px;
+	.info-item {
+		margin-bottom: 10px;
 	}
 	
-	.product-category span, .product-id span:first-child {
-		color: #777;
+	.info-label {
+		font-weight: 500;
+		color: #7f8c8d;
+		margin-right: 5px;
 	}
 	
-	.category-link {
+	.info-value {
+		color: #2c3e50;
+	}
+	
+	.category-name {
 		color: #3498db;
-		text-decoration: none;
-		background: #f0f7fc;
-		padding: 3px 10px;
-		border-radius: 30px;
-		transition: all 0.3s;
-	}
-	
-	.category-link:hover {
-		background: #3498db;
-		color: white;
-	}
-	
-	.id-value {
 		font-weight: 600;
-		color: #555;
 	}
 	
 	.product-price {
-		margin: 20px 0;
-		padding: 15px 0;
-		border-top: 1px solid #eee;
-		border-bottom: 1px solid #eee;
+		margin-bottom: 20px;
+		background-color: #f8f9fa;
+		padding: 15px;
+		border-radius: 5px;
 	}
 	
-	.current-price {
-		font-size: 2em;
+	.price-label {
+		font-weight: 500;
+		color: #7f8c8d;
+	}
+	
+	.price-amount {
+		font-size: 24px;
 		font-weight: 700;
 		color: #e74c3c;
+		margin-left: 10px;
 	}
 	
 	.product-description {
-		margin: 20px 0;
-		flex-grow: 1;
+		margin-bottom: 30px;
 	}
 	
 	.product-description h3 {
-		font-size: 1.2em;
-		color: #333;
+		font-size: 18px;
 		margin-bottom: 15px;
+		color: #2c3e50;
+		border-bottom: 1px solid #ecf0f1;
 		padding-bottom: 10px;
-		border-bottom: 2px solid #f0f0f0;
 	}
 	
-	.description-content {
-		font-size: 16px;
-		line-height: 1.7;
-		color: #555;
+	.product-description p {
+		line-height: 1.6;
+		color: #34495e;
 	}
 	
 	.product-actions {
-		margin-top: 30px;
+		margin-top: 20px;
 	}
 	
 	.quantity-selector {
 		display: flex;
 		align-items: center;
 		margin-bottom: 20px;
-		max-width: 150px;
 	}
 	
-	.quantity-btn {
-		width: 40px;
-		height: 40px;
-		border: 1px solid #ddd;
-		background: white;
+	.quantity-selector label {
+		font-weight: 500;
+		margin-right: 15px;
+	}
+	
+	.quantity-buttons {
 		display: flex;
 		align-items: center;
-		justify-content: center;
-		cursor: pointer;
-		transition: all 0.3s;
-	}
-	
-	.quantity-btn.minus {
-		border-radius: 5px 0 0 5px;
-	}
-	
-	.quantity-btn.plus {
-		border-radius: 0 5px 5px 0;
-	}
-	
-	.quantity-btn:hover {
-		background: #f5f5f5;
-	}
-	
-	.quantity-input {
-		width: 70px;
-		height: 40px;
 		border: 1px solid #ddd;
-		border-left: none;
-		border-right: none;
-		text-align: center;
+		border-radius: 4px;
+		overflow: hidden;
+	}
+	
+	.quantity-decrease,
+	.quantity-increase {
+		background: #f8f9fa;
+		border: none;
+		width: 40px;
+		height: 40px;
+		cursor: pointer;
 		font-size: 16px;
 	}
 	
-	.quantity-input:focus {
-		outline: none;
+	.quantity-decrease:hover,
+	.quantity-increase:hover {
+		background: #e9ecef;
+	}
+	
+	#quantity {
+		width: 60px;
+		height: 40px;
+		text-align: center;
+		border: none;
+		border-left: 1px solid #ddd;
+		border-right: 1px solid #ddd;
 	}
 	
 	.action-buttons {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
+		display: flex;
 		gap: 15px;
 	}
 	
-	.add-to-cart, .buy-now {
-		padding: 15px 25px;
+	.btn-add-to-cart,
+	.btn-buy-now {
+		flex: 1;
+		padding: 15px 0;
 		border: none;
 		border-radius: 5px;
 		font-size: 16px;
 		font-weight: 600;
 		cursor: pointer;
+		transition: all 0.3s;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: 10px;
-		transition: all 0.3s;
+		gap: 8px;
 	}
 	
-	.add-to-cart {
-		background-color: white;
-		color: #3498db;
-		border: 2px solid #3498db;
-	}
-	
-	.add-to-cart:hover {
+	.btn-add-to-cart {
 		background-color: #3498db;
 		color: white;
 	}
 	
-	.buy-now {
+	.btn-add-to-cart:hover {
+		background-color: #2980b9;
+	}
+	
+	.btn-buy-now {
 		background-color: #e74c3c;
 		color: white;
 	}
 	
-	.buy-now:hover {
+	.btn-buy-now:hover {
 		background-color: #c0392b;
 	}
 	
 	@@media (max-width: 768px) {
-		.product-detail-wrapper {
+		.product-detail-content {
 			grid-template-columns: 1fr;
 		}
 		
-		.main-image {
+		.product-main-image {
 			height: 300px;
 		}
 		
-		.product-info {
-			padding: 20px;
-		}
-		
 		.action-buttons {
-			grid-template-columns: 1fr;
+			flex-direction: column;
 		}
 	}
 </style>
 
-@section Scripts {
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Xử lý tăng giảm số lượng sản phẩm
-        const minusBtn = document.querySelector('.quantity-btn.minus');
-        const plusBtn = document.querySelector('.quantity-btn.plus');
-        const quantityInput = document.querySelector('.quantity-input');
-        
-        minusBtn.addEventListener('click', function() {
-            const currentValue = parseInt(quantityInput.value);
-            if (currentValue > 1) {
-                quantityInput.value = currentValue - 1;
-            }
-        });
-        
-        plusBtn.addEventListener('click', function() {
-            const currentValue = parseInt(quantityInput.value);
-            quantityInput.value = currentValue + 1;
-        });
-    });
+	function increaseQuantity() {
+		var quantityInput = document.getElementById('quantity');
+		quantityInput.value = parseInt(quantityInput.value) + 1;
+	}
+	
+	function decreaseQuantity() {
+		var quantityInput = document.getElementById('quantity');
+		var currentValue = parseInt(quantityInput.value);
+		if (currentValue > 1) {
+			quantityInput.value = currentValue - 1;
+		}
+	}
+	
+	function buyNow() {
+		var form = document.querySelector('.add-to-cart-form');
+		var formData = new FormData(form);
+		
+		// Thêm tham số redirect=checkout để biết rằng cần chuyển hướng đến trang thanh toán
+		fetch('/ShoppingCart/AddToCart?redirect=checkout', {
+			method: 'POST',
+			body: formData
+		})
+		.then(response => {
+			if(response.ok) {
+				window.location.href = '/ShoppingCart/Checkout';
+			}
+		})
+		.catch(error => {
+			console.error('Có lỗi xảy ra:', error);
+		});
+	}
 </script>
-}
